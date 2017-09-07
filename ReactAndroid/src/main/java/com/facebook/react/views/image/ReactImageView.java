@@ -313,10 +313,40 @@ public class ReactImageView extends GenericDraweeView {
     mIsDirty = true;
   }
 
+  public static boolean isNull(String str){
+    return str == null || str.length() == 0 || str.toLowerCase().equals("null");
+  }
+
+  public static boolean startsWith(String str, String prefix) {
+    return startsWith(str, prefix, false);
+  }
+
+  private static boolean startsWith(String str, String prefix, boolean ignoreCase) {
+    if (str == null || prefix == null) {
+      return (str == null && prefix == null);
+    }
+    if (prefix.length() > str.length()) {
+      return false;
+    }
+    return str.regionMatches(ignoreCase, 0, prefix, 0, prefix.length());
+  }
+
   public void setLoadingIndicatorSource(@Nullable String name) {
+    if(isNull(name)){
+      return ;
+    }
+    if(startsWith(name, "http")){
+      mCachedImageSource = new ImageSource(getContext(), name);
+      return;
+    }
+    if(startsWith(name, "file")){
+      String path = Uri.parse(name).getPath();
+      mLoadingImageDrawable = MeetyouReactUtils.getDrawable(getContext(), path);
+      return;
+    }
     Drawable drawable = ResourceDrawableIdHelper.getInstance().getResourceDrawable(getContext(), name);
     mLoadingImageDrawable =
-        drawable != null ? (Drawable) new AutoRotateDrawable(drawable, 1000) : null;
+        drawable != null ? /*(Drawable) new AutoRotateDrawable(drawable, 1000)*/null : null;
     mIsDirty = true;
   }
 

@@ -16,12 +16,13 @@ public class DefaultNativeModuleCallExceptionHandler implements NativeModuleCall
 
   @Override
   public void handleException(Exception e) {
-    if (e instanceof RuntimeException) {
-      // Because we are rethrowing the original exception, the original stacktrace will be
-      // preserved.
-      throw (RuntimeException) e;
-    } else {
-      throw new RuntimeException(e);
-    }
+
+//    if (e instanceof RuntimeException) {
+//      // Because we are rethrowing the original exception, the original stacktrace will be
+//      // preserved.
+//      throw (RuntimeException) e;
+//    } else {
+//      throw new RuntimeException(e);
+//    }
   }
 }

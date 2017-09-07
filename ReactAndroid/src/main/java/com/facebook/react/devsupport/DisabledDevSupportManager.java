@@ -14,13 +14,18 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 import com.facebook.react.bridge.DefaultNativeModuleCallExceptionHandler;
+import com.facebook.react.bridge.JSApplicationCausedNativeException;
+import com.facebook.react.bridge.NativeModuleCallExceptionHandler;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.common.JavascriptException;
 import com.facebook.react.devsupport.interfaces.DevOptionHandler;
 import com.facebook.react.devsupport.interfaces.DevSupportManager;
 import com.facebook.react.devsupport.interfaces.PackagerStatusCallback;
 import com.facebook.react.devsupport.interfaces.StackFrame;
 import com.facebook.react.modules.debug.interfaces.DeveloperSettings;
+import com.facebook.react.util.JSStackTrace;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * A dummy implementation of {@link DevSupportManager} to be used in production mode where
@@ -29,14 +34,18 @@ import com.facebook.react.modules.debug.interfaces.DeveloperSettings;
 public class DisabledDevSupportManager implements DevSupportManager {
 
   private final DefaultNativeModuleCallExceptionHandler mDefaultNativeModuleCallExceptionHandler;
-
-  public DisabledDevSupportManager() {
+  private final NativeModuleCallExceptionHandler mJSModuleExceptionHandle;
+  public DisabledDevSupportManager(NativeModuleCallExceptionHandler handler) {
+    mJSModuleExceptionHandle = handler;
     mDefaultNativeModuleCallExceptionHandler = new DefaultNativeModuleCallExceptionHandler();
   }
 
   @Override
   public void showNewJavaError(String message, Throwable e) {
-
+    CrashReport.postCatchedException(e);
+    if(mJSModuleExceptionHandle != null){
+      mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
+    }
   }
 
   @Override
@@ -46,12 +55,18 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void showNewJSError(String message, ReadableArray details, int errorCookie) {
-
+    CrashReport.postCatchedException(new JavascriptException(message));
+    if(mJSModuleExceptionHandle != null){
+      mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
+    }
   }
 
   @Override
   public void updateJSError(String message, ReadableArray details, int errorCookie) {
-
+    CrashReport.postCatchedException(new JavascriptException(message));
+    if(mJSModuleExceptionHandle != null){
+      mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
+    }
   }
 
   @Override
@@ -153,6 +168,11 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void handleException(Exception e) {
+    CrashReport.postCatchedException(e);
+    //JS报错
     mDefaultNativeModuleCallExceptionHandler.handleException(e);
+    if(mJSModuleExceptionHandle != null){
+      mJSModuleExceptionHandle.handleException(e);
+    }
   }
 }

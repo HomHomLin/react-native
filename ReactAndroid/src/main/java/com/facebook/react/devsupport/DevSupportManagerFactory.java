@@ -15,6 +15,7 @@ import java.lang.reflect.Constructor;
 
 import android.content.Context;
 
+import com.facebook.react.bridge.NativeModuleCallExceptionHandler;
 import com.facebook.react.devsupport.interfaces.DevBundleDownloadListener;
 import com.facebook.react.devsupport.interfaces.DevSupportManager;
 
@@ -30,11 +31,12 @@ public class DevSupportManagerFactory {
   private static final String DEVSUPPORT_IMPL_CLASS = "DevSupportManagerImpl";
 
   public static DevSupportManager create(
-      Context applicationContext,
-      ReactInstanceDevCommandsHandler reactInstanceCommandsHandler,
-      @Nullable String packagerPathForJSBundleName,
-      boolean enableOnCreate,
-      int minNumShakes) {
+          Context applicationContext,
+          ReactInstanceDevCommandsHandler reactInstanceCommandsHandler,
+          @Nullable String packagerPathForJSBundleName,
+          boolean enableOnCreate,
+          int minNumShakes,
+          NativeModuleCallExceptionHandler handler) {
 
     return create(
       applicationContext,
@@ -43,7 +45,8 @@ public class DevSupportManagerFactory {
       enableOnCreate,
       null,
       null,
-      minNumShakes);
+      minNumShakes,
+      handler);
   }
 
   public static DevSupportManager create(
@@ -53,9 +56,10 @@ public class DevSupportManagerFactory {
     boolean enableOnCreate,
     @Nullable RedBoxHandler redBoxHandler,
     @Nullable DevBundleDownloadListener devBundleDownloadListener,
-    int minNumShakes) {
+    int minNumShakes,
+    NativeModuleCallExceptionHandler handler) {
     if (!enableOnCreate) {
-      return new DisabledDevSupportManager();
+      return new DisabledDevSupportManager(handler);
     }
     try {
       // ProGuard is surprisingly smart in this case and will keep a class if it detects a call to
