@@ -168,11 +168,13 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void handleException(Exception e) {
-    CrashReport.postCatchedException(e);
+    e.printStackTrace();
     //JS报错
     mDefaultNativeModuleCallExceptionHandler.handleException(e);
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(e);
     }
+
+    CrashReport.postCatchedException(e);
   }
 }
