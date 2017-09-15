@@ -248,6 +248,7 @@ public class ReactInstanceManagerBuilder {
       mApplication,
       mCurrentActivity,
       mDefaultHardwareBackBtnHandler,
+            mJSBundleAssetUrl,
       (mJSBundleLoader == null && mJSBundleAssetUrl != null) ?
         JSBundleLoader.createAssetLoader(mApplication, mJSBundleAssetUrl, false /*Asynchronous*/) :
         mJSBundleLoader,

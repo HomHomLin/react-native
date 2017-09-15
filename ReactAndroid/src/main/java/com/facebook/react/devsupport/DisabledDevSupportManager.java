@@ -35,14 +35,18 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   private final DefaultNativeModuleCallExceptionHandler mDefaultNativeModuleCallExceptionHandler;
   private final NativeModuleCallExceptionHandler mJSModuleExceptionHandle;
-  public DisabledDevSupportManager(NativeModuleCallExceptionHandler handler) {
+  private final String bundleUrl;
+  private final String module;
+  public DisabledDevSupportManager(String bundleUrl, String module, NativeModuleCallExceptionHandler handler) {
     mJSModuleExceptionHandle = handler;
+    this.bundleUrl = bundleUrl;
+    this.module = module;
     mDefaultNativeModuleCallExceptionHandler = new DefaultNativeModuleCallExceptionHandler();
   }
 
   @Override
   public void showNewJavaError(String message, Throwable e) {
-    CrashReport.postCatchedException(e);
+    CrashReport.postCatchedException(new JSException("BundleUrl:" + bundleUrl,"BundleName:" + module , e));
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
     }
@@ -55,7 +59,7 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void showNewJSError(String message, ReadableArray details, int errorCookie) {
-    CrashReport.postCatchedException(new JavascriptException(message));
+    CrashReport.postCatchedException(new JavascriptException("BundleUrl:" + bundleUrl + ", BundleName:" + module + ",message:" + message));
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
     }
@@ -63,7 +67,7 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void updateJSError(String message, ReadableArray details, int errorCookie) {
-    CrashReport.postCatchedException(new JavascriptException(message));
+    CrashReport.postCatchedException(new JavascriptException("BundleUrl:" + bundleUrl + ", BundleName:" + module + ",message:" + message));
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
     }
@@ -169,12 +173,13 @@ public class DisabledDevSupportManager implements DevSupportManager {
   @Override
   public void handleException(Exception e) {
     e.printStackTrace();
-    //JS报错
+    //JS执行期报错
     mDefaultNativeModuleCallExceptionHandler.handleException(e);
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(e);
     }
 
-    CrashReport.postCatchedException(e);
+    CrashReport.postCatchedException(new JSException("BundleUrl:" + bundleUrl,"BundleName:" + module , e));
+
   }
 }

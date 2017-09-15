@@ -43,31 +43,44 @@ public class ExceptionsManagerModule extends BaseJavaModule {
 
   @ReactMethod
   public void reportSoftException(String title, ReadableArray details, int exceptionId) {
-    if (mDevSupportManager.getDevSupportEnabled()) {
+    if(mDevSupportManager != null){
       mDevSupportManager.showNewJSError(title, details, exceptionId);
-    } else {
-      CrashReport.postCatchedException(new JavascriptException(JSStackTrace.format(title, details)));
-      FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
     }
+    FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
+//    if (mDevSupportManager.getDevSupportEnabled()) {
+//      mDevSupportManager.showNewJSError(title, details, exceptionId);
+//    } else {
+//      CrashReport.postCatchedException(new JavascriptException(JSStackTrace.format(title, details)));
+//      FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
+//    }
   }
 
   private void showOrThrowError(String title, ReadableArray details, int exceptionId) {
-    if (mDevSupportManager.getDevSupportEnabled()) {
+    if(mDevSupportManager != null){
       mDevSupportManager.showNewJSError(title, details, exceptionId);
-    } else {
-      CrashReport.postCatchedException(new JavascriptException(JSStackTrace.format(title, details)));
-      FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
     }
+    FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
+//    if (mDevSupportManager.getDevSupportEnabled()) {
+//      mDevSupportManager.showNewJSError(title, details, exceptionId);
+//    } else {
+//      CrashReport.postCatchedException(new JavascriptException(JSStackTrace.format(title, details)));
+//      FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
+//    }
   }
 
   @ReactMethod
   public void updateExceptionMessage(String title, ReadableArray details, int exceptionId) {
-    if (mDevSupportManager.getDevSupportEnabled()) {
+    //现在测试期是不会上报错误了
+    if(mDevSupportManager != null){
       mDevSupportManager.updateJSError(title, details, exceptionId);
-    }else{
-      CrashReport.postCatchedException(new JavascriptException(JSStackTrace.format(title, details)));
-      FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
     }
+    FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
+//    if (mDevSupportManager.getDevSupportEnabled()) {
+//      mDevSupportManager.updateJSError(title, details, exceptionId);
+//    }else{
+//      CrashReport.postCatchedException(new JavascriptException(JSStackTrace.format(title, details)));
+//      FLog.e(ReactConstants.TAG, JSStackTrace.format(title, details));
+//    }
   }
 
   @ReactMethod

@@ -127,6 +127,7 @@ public class ReactInstanceManager {
   private volatile @Nullable Thread mCreateReactContextThread;
 
   /* accessed from any thread */
+  private final @Nullable String mJSBundleUrl;
   private final @Nullable JSBundleLoader mBundleLoader; /* path to JS bundle on file system */
   private final @Nullable String mJSMainModuleName; /* path to JS bundle root on packager server */
   private final List<ReactPackage> mPackages;
@@ -207,6 +208,7 @@ public class ReactInstanceManager {
     Context applicationContext,
     @Nullable Activity currentActivity,
     @Nullable DefaultHardwareBackBtnHandler defaultHardwareBackBtnHandler,
+    @Nullable String jsBundleUrl,
     @Nullable JSBundleLoader bundleLoader,
     @Nullable String jsMainModuleName,
     List<ReactPackage> packages,
@@ -233,12 +235,14 @@ public class ReactInstanceManager {
     mCurrentActivity = currentActivity;
     mDefaultBackButtonImpl = defaultHardwareBackBtnHandler;
     mBundleLoader = bundleLoader;
+    mJSBundleUrl = jsBundleUrl;
     mJSMainModuleName = jsMainModuleName;
     mPackages = new ArrayList<>();
     mUseDeveloperSupport = useDeveloperSupport;
     mDevSupportManager = DevSupportManagerFactory.create(
         applicationContext,
         mDevInterface,
+        mJSBundleUrl,
         mJSMainModuleName,
         useDeveloperSupport,
         redBoxHandler,
