@@ -6,7 +6,7 @@ repositories {
 
 //for project dependency
 project.group = GROUP_ID
-project.version = RN_VERSION
+project.version = REACTNATIVE_VERSION
 task deploy <<{
 }
 deploy.dependsOn uploadArchives
@@ -14,8 +14,8 @@ deploy.dependsOn uploadArchives
 uploadArchives {
     def typePattern = ~"[0-9]\\.[0-9]\\.[0-9]\$"
     def depolyTypeUrl
-    if(typePattern.matcher(RN_VERSION)){
-        println "warn ! find release version! will deploy release aar! version is $RN_VERSION  "
+    if(typePattern.matcher(REACTNATIVE_VERSION)){
+        println "warn ! find release version! will deploy release aar! version is $REACTNATIVE_VERSION  "
         depolyTypeUrl= deployUrl.replace("snapshots","releases")
     }else {
         depolyTypeUrl = deployUrl
@@ -31,7 +31,7 @@ uploadArchives {
             groupId GROUP_ID
             artifactId POM_ARTIFACT_ID
             packaging PACKAGE_FORMAT
-            version RN_VERSION
+            version REACTNATIVE_VERSION
 
         }
     }
