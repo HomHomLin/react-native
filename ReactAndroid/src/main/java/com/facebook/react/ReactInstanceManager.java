@@ -209,6 +209,7 @@ public class ReactInstanceManager {
     @Nullable Activity currentActivity,
     @Nullable DefaultHardwareBackBtnHandler defaultHardwareBackBtnHandler,
     @Nullable String jsBundleUrl,
+    String jssource,
     @Nullable JSBundleLoader bundleLoader,
     @Nullable String jsMainModuleName,
     List<ReactPackage> packages,
@@ -243,6 +244,8 @@ public class ReactInstanceManager {
         applicationContext,
         mDevInterface,
         mJSBundleUrl,
+
+      jssource,
         mJSMainModuleName,
         useDeveloperSupport,
         redBoxHandler,

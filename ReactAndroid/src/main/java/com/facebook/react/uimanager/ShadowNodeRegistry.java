@@ -30,6 +30,10 @@ import com.facebook.react.common.SingleThreadAsserter;
     mThreadAsserter = new SingleThreadAsserter();
   }
 
+  public SparseArray<ReactShadowNode> getTags(){
+    return mTagsToCSSNodes;
+  }
+
   public void addRootNode(ReactShadowNode node) {
     // TODO(6242243): This should be asserted... but UIManagerModule is
     // thread-unsafe and calls this on the wrong thread.

@@ -151,6 +151,9 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
     YogaNodePool.get().clear();
     ViewManagerPropertyUpdater.clear();
   }
+  public void resetView(){
+    mUIImplementation.resetView();
+  }
 
   private static Map<String, Object> createConstants(
     List<ViewManager> viewManagerList,

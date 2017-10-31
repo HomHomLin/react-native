@@ -12,6 +12,7 @@ package com.facebook.react.bridge;
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
@@ -73,8 +74,9 @@ public class ReadableNativeMap extends NativeMap implements ReadableMap {
           break;
         case Number:
           Double d = getDouble(key);
+          BigDecimal bigDecimal = new BigDecimal(d.toString());
           try {
-            String s = d.toString();
+            String s = bigDecimal.toPlainString();
             if (s.contains(".")) {
               String end = s.split("\\.")[1];
               int end_i = Integer.valueOf(end);
@@ -82,12 +84,14 @@ public class ReadableNativeMap extends NativeMap implements ReadableMap {
                 hashMap.put(key, getInt(key));
                 break;
               }
+            }else{
+              hashMap.put(key, getInt(key));
+              break;
             }
           }catch (Exception e){
             e.printStackTrace();
           }
-          hashMap.put(key, d);
-//          hashMap.put(key, getDouble(key));
+          hashMap.put(key, bigDecimal);
           break;
         case String:
           hashMap.put(key, getString(key));

@@ -27,6 +27,7 @@ public class ReactInstanceManagerBuilder {
 
   private @Nullable String mJSBundleAssetUrl;
   private @Nullable JSBundleLoader mJSBundleLoader;
+  private String mJSSource;
   private @Nullable String mJSMainModuleName;
   private @Nullable NotThreadSafeBridgeIdleDebugListener mBridgeIdleDebugListener;
   private @Nullable Application mApplication;
@@ -63,6 +64,11 @@ public class ReactInstanceManagerBuilder {
    * Name of the JS bundle file to be loaded from application's raw assets.
    * Example: {@code "index.android.js"}
    */
+  public ReactInstanceManagerBuilder setJSSource(String source) {
+    mJSSource = source;
+    return this;
+  }
+
   public ReactInstanceManagerBuilder setBundleAssetName(String bundleAssetName) {
     mJSBundleAssetUrl = (bundleAssetName == null ? null : "assets://" + bundleAssetName);
     mJSBundleLoader = null;
@@ -249,6 +255,7 @@ public class ReactInstanceManagerBuilder {
       mCurrentActivity,
       mDefaultHardwareBackBtnHandler,
             mJSBundleAssetUrl,
+      mJSSource,
       (mJSBundleLoader == null && mJSBundleAssetUrl != null) ?
         JSBundleLoader.createAssetLoader(mApplication, mJSBundleAssetUrl, false /*Asynchronous*/) :
         mJSBundleLoader,

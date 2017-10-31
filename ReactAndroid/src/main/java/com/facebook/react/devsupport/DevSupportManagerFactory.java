@@ -43,6 +43,7 @@ public class DevSupportManagerFactory {
       applicationContext,
       reactInstanceCommandsHandler,
       bundleUrl,
+      null,
       packagerPathForJSBundleName,
       enableOnCreate,
       null,
@@ -55,6 +56,7 @@ public class DevSupportManagerFactory {
     Context applicationContext,
     ReactInstanceDevCommandsHandler reactInstanceCommandsHandler,
     @Nullable String bundleUrl,
+    String jssource,
     @Nullable String packagerPathForJSBundleName,
     boolean enableOnCreate,
     @Nullable RedBoxHandler redBoxHandler,
@@ -62,7 +64,7 @@ public class DevSupportManagerFactory {
     int minNumShakes,
     NativeModuleCallExceptionHandler handler) {
     if (!enableOnCreate) {
-      return new DisabledDevSupportManager(bundleUrl,packagerPathForJSBundleName, handler);
+      return new DisabledDevSupportManager(jssource,bundleUrl,packagerPathForJSBundleName, handler);
     }
     try {
       // ProGuard is surprisingly smart in this case and will keep a class if it detects a call to

@@ -37,16 +37,18 @@ public class DisabledDevSupportManager implements DevSupportManager {
   private final NativeModuleCallExceptionHandler mJSModuleExceptionHandle;
   private final String bundleUrl;
   private final String module;
-  public DisabledDevSupportManager(String bundleUrl, String module, NativeModuleCallExceptionHandler handler) {
+  private final String source;
+  public DisabledDevSupportManager(String source, String bundleUrl, String module, NativeModuleCallExceptionHandler handler) {
     mJSModuleExceptionHandle = handler;
     this.bundleUrl = bundleUrl;
     this.module = module;
+    this.source = source;
     mDefaultNativeModuleCallExceptionHandler = new DefaultNativeModuleCallExceptionHandler();
   }
 
   @Override
   public void showNewJavaError(String message, Throwable e) {
-    CrashReport.postCatchedException(new JSException("BundleUrl:" + bundleUrl,"BundleName:" + module , e));
+    CrashReport.postCatchedException(new JSException("BundleUrl:" + source + ";" + bundleUrl,"BundleName:" + module , e));
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
     }
@@ -59,7 +61,7 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void showNewJSError(String message, ReadableArray details, int errorCookie) {
-    CrashReport.postCatchedException(new JavascriptException("BundleUrl:" + bundleUrl + ", BundleName:" + module + ",message:" + message));
+    CrashReport.postCatchedException(new JavascriptException("BundleUrl:" + source + ";" + bundleUrl + ", BundleName:" + module + ",message:" + message));
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
     }
@@ -67,7 +69,7 @@ public class DisabledDevSupportManager implements DevSupportManager {
 
   @Override
   public void updateJSError(String message, ReadableArray details, int errorCookie) {
-    CrashReport.postCatchedException(new JavascriptException("BundleUrl:" + bundleUrl + ", BundleName:" + module + ",message:" + message));
+    CrashReport.postCatchedException(new JavascriptException("BundleUrl:" + source + ";" + bundleUrl + ", BundleName:" + module + ",message:" + message));
     if(mJSModuleExceptionHandle != null){
       mJSModuleExceptionHandle.handleException(new JSApplicationCausedNativeException(message));
     }
@@ -179,7 +181,7 @@ public class DisabledDevSupportManager implements DevSupportManager {
       mJSModuleExceptionHandle.handleException(e);
     }
 
-    CrashReport.postCatchedException(new JSException("BundleUrl:" + bundleUrl,"BundleName:" + module , e));
+    CrashReport.postCatchedException(new JSException("BundleUrl:" + source + ";" + bundleUrl,"BundleName:" + module , e));
 
   }
 }

@@ -13,9 +13,12 @@ import javax.annotation.Nullable;
 
 import android.view.View;
 
+import com.facebook.react.MeetyouReactBridge;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Dynamic;
+
+import java.util.HashMap;
 
 /**
  * Wrapper for {@link ReadableMap} which should be used for styles property map. It extends
@@ -39,57 +42,121 @@ public class ReactStylesDiffMap {
 
   /* package */ final ReadableMap mBackingMap;
 
+  final HashMap<String, Object> mHashMap;
+
+  public ReactStylesDiffMap(HashMap<String, Object> map) {
+    mBackingMap = null;
+    mHashMap = map;
+  }
+
   public ReactStylesDiffMap(ReadableMap props) {
     mBackingMap = props;
+    mHashMap = null;
   }
 
   public boolean hasKey(String name) {
+    if(mHashMap != null){
+      return mHashMap.containsKey(name);
+    }
     return mBackingMap.hasKey(name);
   }
 
   public boolean isNull(String name) {
+    if(mHashMap != null){
+      return !mHashMap.containsKey(name);
+    }
     return mBackingMap.isNull(name);
   }
 
   public boolean getBoolean(String name, boolean restoreNullToDefaultValue) {
-    return mBackingMap.isNull(name) ? restoreNullToDefaultValue : mBackingMap.getBoolean(name);
+    boolean orgin = restoreNullToDefaultValue;
+    if(mBackingMap != null){
+      orgin = mBackingMap.isNull(name) ? restoreNullToDefaultValue : mBackingMap.getBoolean(name);
+    }
+    if (MeetyouReactBridge.getBridge().getListener() != null) {
+      return MeetyouReactBridge.getBridge().getListener().getBoolean(name, orgin);
+    }
+    return orgin;
   }
 
   public double getDouble(String name, double restoreNullToDefaultValue) {
-    return mBackingMap.isNull(name) ? restoreNullToDefaultValue : mBackingMap.getDouble(name);
+    double orgin = restoreNullToDefaultValue;
+    if(mBackingMap != null){
+      orgin = mBackingMap.isNull(name) ? restoreNullToDefaultValue : mBackingMap.getDouble(name);
+    }
+    if (MeetyouReactBridge.getBridge().getListener() != null) {
+      return MeetyouReactBridge.getBridge().getListener().getDouble(name, orgin);
+    }
+    return orgin;
   }
 
   public float getFloat(String name, float restoreNullToDefaultValue) {
-    return mBackingMap.isNull(name) ?
-        restoreNullToDefaultValue : (float) mBackingMap.getDouble(name);
+    float orgin = restoreNullToDefaultValue;
+    if(mBackingMap != null){
+      orgin = mBackingMap.isNull(name) ? restoreNullToDefaultValue : (float)mBackingMap.getDouble(name);
+    }
+    if (MeetyouReactBridge.getBridge().getListener() != null) {
+      return MeetyouReactBridge.getBridge().getListener().getFloat(name, orgin);
+    }
+    return orgin;
   }
 
   public int getInt(String name, int restoreNullToDefaultValue) {
-    return mBackingMap.isNull(name) ? restoreNullToDefaultValue : mBackingMap.getInt(name);
+
+    int orgin = restoreNullToDefaultValue;
+    if(mBackingMap != null){
+      orgin = mBackingMap.isNull(name) ? restoreNullToDefaultValue : mBackingMap.getInt(name);
+    }
+    if(mHashMap != null){
+      orgin = mHashMap.containsKey(name) ? (int)mHashMap.get(name) : restoreNullToDefaultValue;
+    }
+    if (MeetyouReactBridge.getBridge().getListener() != null) {
+      return MeetyouReactBridge.getBridge().getListener().getInt(name, orgin);
+    }
+    return orgin;
   }
 
   @Nullable
   public String getString(String name) {
-    return mBackingMap.getString(name);
+    String orgin = null;
+    if(mBackingMap != null){
+      orgin = mBackingMap.getString(name);
+    }
+    if (MeetyouReactBridge.getBridge().getListener() != null) {
+      return MeetyouReactBridge.getBridge().getListener().getString(name, orgin);
+    }
+    return orgin;
   }
 
   @Nullable
   public ReadableArray getArray(String key) {
+    if(mBackingMap == null){
+      return null;
+    }
     return mBackingMap.getArray(key);
   }
 
   @Nullable
   public ReadableMap getMap(String key) {
+    if(mBackingMap == null){
+      return null;
+    }
     return mBackingMap.getMap(key);
   }
 
   @Nullable
   public Dynamic getDynamic(String key) {
+    if(mBackingMap == null){
+      return null;
+    }
     return mBackingMap.getDynamic(key);
   }
 
   @Override
   public String toString() {
+    if(mHashMap != null){
+      return "{ " + getClass().getSimpleName() + ": " + mHashMap.toString() + " }";
+    }
     return "{ " + getClass().getSimpleName() + ": " + mBackingMap.toString() + " }";
   }
 }

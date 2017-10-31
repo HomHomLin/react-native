@@ -325,4 +325,4 @@ dependencies {
     androidTestCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 }
 
-apply from: 'react.gradle'
+apply from :rootProject.file('react.gradle')
