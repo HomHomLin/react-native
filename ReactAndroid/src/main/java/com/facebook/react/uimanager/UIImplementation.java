@@ -104,20 +104,28 @@ public class UIImplementation {
     try {
       SparseArray<ReactShadowNode> nodes = mShadowNodeRegistry.getTags();
       for (int i = 0; i < nodes.size(); i++) {
-//        int key = nodes.keyAt(i);
-        ReactShadowNode cssNode = nodes.valueAt(i);
-//        ReactShadowNode cssNode = nodes.get(key);
-        if (cssNode == null) {
-          throw new IllegalViewOperationException("Trying to update non-existent view with tag " + i);
-        }
-        HashMap<String,Object> map = mTagsToProp.get(cssNode.getReactTag());
-        if (map != null) {
-          ReactStylesDiffMap styles = new ReactStylesDiffMap(map);
-          cssNode.updateProperties(styles);
-          String className = cssNode.getViewClass();
-          handleUpdateView(cssNode, className, styles);
+        try {
+          int key = nodes.keyAt(i);
+//        ReactShadowNode cssNode = nodes.valueAt(i);
+          ReactShadowNode cssNode = nodes.get(key);
+          if (cssNode == null) {
+            throw new IllegalViewOperationException("Trying to update non-existent view with tag " + i);
+          }
+          HashMap<String, Object> map = mTagsToProp.get(cssNode.getReactTag());
+          if (map != null) {
+            ReactStylesDiffMap styles = new ReactStylesDiffMap(map);
+            cssNode.updateProperties(styles);
+//          String className = cssNode.getViewClass();
+//          handleUpdateView(cssNode, className, styles);
+            notifyOnBeforeLayoutRecursive(cssNode);
+            cssNode.onCollectExtraUpdates(mOperationsQueue);
+            synchronouslyUpdateViewOnUIThread(cssNode.getReactTag(), styles);
+          }
+        }catch (Exception e){
+          e.printStackTrace();
         }
       }
+      mOperationsQueue.excuteUpdate();
     }catch (Exception e){
       e.printStackTrace();
     }

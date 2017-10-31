@@ -532,6 +532,7 @@ public class UIViewOperationQueue {
 
   // Only called from the UIManager queue?
   private ArrayList<UIOperation> mOperations = new ArrayList<>();
+  private ArrayList<UIOperation> mResetOperations = new ArrayList<>();
 
   @GuardedBy("mDispatchRunnablesLock")
   private ArrayList<Runnable> mDispatchUIRunnables = new ArrayList<>();
@@ -611,6 +612,18 @@ public class UIViewOperationQueue {
 
   public void enqueueUpdateExtraData(int reactTag, Object extraData) {
     mOperations.add(new UpdateViewExtraData(reactTag, extraData));
+    mResetOperations.add(new UpdateViewExtraData(reactTag, extraData));
+  }
+
+  public void excuteUpdate(){
+    for(UIOperation uiOperation :mResetOperations){
+      try {
+        uiOperation.execute();
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+    }
+    mResetOperations.clear();
   }
 
   public void enqueueShowPopupMenu(

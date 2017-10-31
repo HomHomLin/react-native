@@ -153,6 +153,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule implements
   }
   public void resetView(){
     mUIImplementation.resetView();
+//    onBatchComplete();
   }
 
   private static Map<String, Object> createConstants(
