@@ -122,7 +122,7 @@ public class UIImplementation {
             synchronouslyUpdateViewOnUIThread(cssNode.getReactTag(), styles);
           }
         }catch (Exception e){
-          e.printStackTrace();
+//          e.printStackTrace();
         }
       }
       mOperationsQueue.excuteUpdate();
