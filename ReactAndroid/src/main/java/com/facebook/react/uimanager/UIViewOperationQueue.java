@@ -754,6 +754,7 @@ public class UIViewOperationQueue {
       } else {
         batchedOperations = null;
       }
+      mResetOperations.clear();
 
       final ArrayDeque<UIOperation> nonBatchedOperations;
       synchronized (mNonBatchedOperationsLock) {
