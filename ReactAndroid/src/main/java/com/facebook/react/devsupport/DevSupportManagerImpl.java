@@ -478,7 +478,7 @@ public class DevSupportManagerImpl implements
               }
             })
             .create();
-    mDevOptionsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+    mDevOptionsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
     mDevOptionsDialog.show();
   }
 
