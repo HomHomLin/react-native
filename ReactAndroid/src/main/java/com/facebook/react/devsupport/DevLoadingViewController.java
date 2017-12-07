@@ -140,10 +140,20 @@ public class DevLoadingViewController {
 
   private void setVisible(boolean visible) {
     if (visible && !mIsVisible) {
+      int type = WindowManager.LayoutParams.TYPE_TOAST;
+      if (Build.VERSION.SDK_INT >= 24) {
+        type = WindowManager.LayoutParams.TYPE_PHONE;
+
+//      params.type = WindowManager.LayoutParams.TYPE_PHONE;
+      } else {
+        type = WindowManager.LayoutParams.TYPE_TOAST;
+
+//      params.type = WindowManager.LayoutParams.TYPE_TOAST;
+      }
       WindowManager.LayoutParams params = new WindowManager.LayoutParams(
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
-        WindowManager.LayoutParams.TYPE_TOAST,
+        type,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
         PixelFormat.TRANSLUCENT);
       params.gravity = Gravity.TOP;

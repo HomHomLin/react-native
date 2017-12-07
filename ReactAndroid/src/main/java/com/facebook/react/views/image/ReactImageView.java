@@ -344,9 +344,9 @@ public class ReactImageView extends GenericDraweeView {
       mLoadingImageDrawable = MeetyouReactUtils.getDrawable(getContext(), path);
       return;
     }
-    Drawable drawable = ResourceDrawableIdHelper.getInstance().getResourceDrawable(getContext(), name);
-    mLoadingImageDrawable =
-        drawable != null ? /*(Drawable) new AutoRotateDrawable(drawable, 1000)*/null : null;
+    mLoadingImageDrawable = ResourceDrawableIdHelper.getInstance().getResourceDrawable(getContext(), name);
+//    mLoadingImageDrawable =
+//        drawable != null ? /*(Drawable) new AutoRotateDrawable(drawable, 1000)*/null : null;
     mIsDirty = true;
   }
 
